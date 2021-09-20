@@ -1,18 +1,32 @@
+***Tento repozitár nemá nijak poškodzovať spoločnosť Slovak Telekom a ani ich oficiálnu aplikáciu z ktorej bolo spracované toto API.***
+
+**Použitie API z tohoto dokumentu nemusí byť povolené Telekomom pre neoficiálne aplikácie!** *Nezodpovedám za akékoľvek problémy ktoré môžu nastať.*
+
 # Slovak Telekom App API
-Pokus o zreverseengineerovanie API aplikácie slovenského Telekomu. Čistoteoreticky vhodný pre použitie na všetkých možných platformách.
+Zreverseengineerované API z oficiálnej aplikácie slovenského Telekomu. Na GitHube naschvál aby sa dalo jednoducho nájsť a pokiaľ možno aj pochopiť.
 
-* Pôvodne určený na využitie v neoficiálnej Telekom aplikácií pre UWP Windows, SailfishOS a iné.
+* Pôvodne na využitie v rôznych neoficiálnych Telekom aplikáciach pre UWP Windows, SailfishOS a iné rôzne platformy na ktoré neexistuje žiadna oficiálna aplikácia.
+* Všetky popísané requesty fungujú dokedy ich Telekom neprešteluje a nepokazí. *(čož dúfajme že sa ani nestane)*
 
-* Funguje dokedy to Telekom neprešteluje a nepokazí.
+## Prispievanie do repozitára
+Keď vám nejaká podstatná vec chýba, chcete niečo doplniť tak kľudne do toho, potom môžete poslať pull request s novými informáciami.
+Každá doplnená vec sa ráta.
+
+## Autor
+V prípade záujmu môžete poslať otázku/dopyt/čokoľvek do Issues sekcie tu v tomto repozitári.
+
+**Richard Gráčik - Morc** ([@TheMorc](https://github.com/TheMorc))
 
 ## Popis API *(možno moc nečítateľný)*
 * curl príkazy povačšine čisté
 * response možno nie pri všetkých krokoch dostupný ale väčšinou s popisom čo obsahuje 
 * kopa vecí je plná otáznikov a netuším čo a ako
 
-### postup pri prvom pustení: pýtať pin, verifikuvať, prihlásiť a vytlačiť dashboard
-### postup pri pustení do 10 minút: prihlásiť a vytlačiť dashboard
-### postup pri pustení od 10 minút hore: popýtať nový token, prihlásiť a vytlačiť dashboard
+**postup pri prvom pustení:** pýtať pin, verifikuvať, prihlásiť a vytlačiť dashboard
+
+**postup pri pustení do 10 minút:** prihlásiť a vytlačiť dashboard
+
+**postup pri pustení od 10 minút hore:** popýtať nový token, prihlásiť a vytlačiť dashboard
 ## 
 
 ### pýtaní pinu na číslo
