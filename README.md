@@ -8,7 +8,9 @@ Zreverseengineerované API z oficiálnej aplikácie slovenského Telekomu. Na Gi
 * Pôvodne na využitie v rôznych neoficiálnych Telekom aplikáciach pre UWP Windows, SailfishOS a iné rôzne platformy na ktoré neexistuje žiadna oficiálna aplikácia.
 * Všetky popísané requesty fungujú dokedy ich Telekom neprešteluje a nepokazí. *(čož dúfajme že sa ani nestane)*
 
-Zároveň je v tomto repozitári aj **[funkčný pythonový príklad využitia tohoto API](https://github.com/TheMorc/telekom-api/blob/main/telekom.py)**.
+Funkčné príklady využitia tohto API:
+* **[Pythonový bastl v tomto repozitári](https://github.com/TheMorc/telekom-api/blob/main/telekom.py)**
+* **[UWP aplikácia pre Windows](https://github.com/TheMorc/telekom-uwp)**
 
 ## Prispievanie do repozitára
 Keď vám nejaká podstatná vec chýba, chcete niečo doplniť tak kľudne do toho, potom môžete poslať pull request s novými informáciami.
