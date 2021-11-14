@@ -285,7 +285,7 @@ GET https://t-app.telekom.sk/billingMonths?monthCount=24
 GET https://t-app.telekom.sk/customerBills/paid/2021/9
 ```
 * response má údaje a veci naokolo
-```
+```json
 [
     {
         "appliedPayment": [],
