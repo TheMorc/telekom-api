@@ -152,6 +152,7 @@ curl -H 'Accept: */*' -H 'Authorization: Bearer <TU JE accessToken>' \
 ```
 
 ##
+
 ### popýtavaní nového tokenu
 * pýta refreshToken
 ```shell
@@ -161,3 +162,316 @@ curl -H 'Accept: */*' -H 'Authorization: FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF' -
 -X POST https://t-app.telekom.sk/token/ -d '{"genCenToken":false,"refreshToken":"<TU JE refreshToken>","deviceId":"0D3BF2CC-AD00-4881-B815-D159BFDAC1E7"}'
 ```
 * response má nový accessToken kerý sa používa potom v apke, asi aj nový refreshToken na potomajšé refreshuvaní
+
+##
+
+### "Akcie a súťaže" webview
+* pýta accessToken
+```
+http://m.telekom.sk/api/app-sutaze-akcie/ver2/?zdroj=oneapp_menu
+```
+
+##
+
+### "Magenta1 Skupina" webview 
+* pýta accessToken - ako Authorization: Bearer
+```
+https://m.telekom.sk/api/app-sutaze-akcie/ver2/magenta1/?zdroj=oneapp_menu
+```
+
+##
+
+### "Eshop" webview
+```
+https://www.telekom.sk/eshop-telekom?traffic_source=app_webview
+```
+
+##
+
+### Nezaplatené faktúry (v aplikácií nad dashboardom tuším)
+* pýta accessToken
+```
+https://t-app.telekom.sk/customerBills/unpaid/summary/
+```
+* response má počet, cenu a faktúru
+
+##
+
+### aktualizovať SIM label
+* pýta accessToken a json s novým menom
+```
+PATCH https://t-app.telekom.sk/profiles/MSISDN_<MSISDN s číslom>/manageableAssets/<ŠPECIFICKÝ SIEBEL PRD PRODUKT>?fields=label
+```
+* json príklad
+```json
+{
+    "label": "SIMka"
+}
+```
+* response má SIEBEL PRD PRODUKT id a nové meno
+
+##
+
+### aktualizovať profil (meno, email, číslo atď)
+* pýta accessToken a json s novými údajmi
+```
+PATCH https://t-app.telekom.sk/profiles/MSISDN_<MSISDN s číslom>?fields=individual%2Ccharacteristics%2CcontactMediums
+```
+* json príklad
+```json
+{
+    "contactMediums": [
+        {
+            "medium": {
+                "number": "+4219XXxxxXXX"
+            },
+            "role": {
+                "name": "contact"
+            },
+            "type": "mobile"
+        },
+        {
+            "medium": {
+                "emailAddress": "mail@Example.com"
+            },
+            "role": {
+                "name": "contact"
+            },
+            "type": "email"
+        }
+    ],
+    "individual": {
+        "familyName": "Priezvisko",
+        "givenName": "Meno"
+    }
+}
+```
+* response má characteristics s telekom_username, contactMediums s číslom a mailom, detailedStatus, id, individual s menom a prievziskom a status
+
+##
+
+### Faktúruvačky
+* bere accessToken
+```
+GET https://t-app.telekom.sk/billingMonths?monthCount=24
+```
+* skrátený response
+```json
+[
+    {
+        "month": 9,
+        "year": 2021
+    },
+    {
+        "month": 8,
+        "year": 2021
+    },
+    {
+        "month": 7,
+        "year": 2021
+    },
+    {
+        "month": 11,
+        "year": 2019
+    }
+]
+```
+
+##
+
+### Špecifické fakturačné období
+* bere accessToken
+```
+GET https://t-app.telekom.sk/customerBills/paid/2021/9
+```
+* response má údaje a veci naokolo
+```
+[
+    {
+        "appliedPayment": [],
+        "billDate": "2021-09-01",
+        "billDocument": [],
+        "billingAccount": {
+            "businessId": "xxxxxxxxxx",
+            "id": "SIEBEL-PRD-BILLING_PROFILE-xxxxxxxxxxxx",
+            "name": "xxxxxxxxxx"
+        },
+        "id": "SIEBEL-PRD-BILLING_PROFILE-xxxxxxxxxxxx__RMCA-PRD-INVOICE-xxxxxxxxxxxx",
+        "isBillUnpayable": false,
+        "relatedParty": [],
+        "taxItem": [],
+        "type": "Pravidelná faktúra"
+    }
+]
+```
+
+##
+
+### Detaily špecifického fakturačného obdobia
+* bere accessToken
+```
+GET https://t-app.telekom.sk/customerBills/SIEBEL-PRD-BILLING_PROFILE-xxxxxxxxxxxx__RMCA-PRD-INVOICE-xxxxxxxxxxxx
+```
+* response má všetky sprostosti naokolo od odkazu na faktúru v PDFku, ceny, dátumy a tak.
+
+##
+
+### Aktuálny výpis pre kartu
+* bere accessToken
+```
+GET https://t-app.telekom.sk/manageServices/product/SIEBEL-PRD-PRODUCT-xxxxxxxxxxxxxxxxxxxxxx/details?checkCancelEligibility=false&devicesWithEMI=false&disableDocumentManagement=true&enableExtraData=false&enableFreeUnit=true&enableVasCategories=false&profileId=MSISDN_<tu je MSISDN s číslom>&serviceOnboarding=false&serviceOutageEnabled=false&subscriptionServiceEnabled=false&swapEnabled=false&tariffOfferEnable=true&transferUnitsEnabled=false&vasDelay=true
+```
+* response má všetky údaje o paušáli, zostávajúce dáta, SMSky, MMSky, prevolané a neprevolané minúty, dátumy, IDčká atď
+
+##
+
+### Vypíš dostupné data/roam balíčkové skupiny
+* bere accessToken
+```
+GET https://t-app.telekom.sk/v2/manageServices/product/SIEBEL-PRD-PRODUCT-xxxxxxxxxxxxxxxxxxxxxx/addons/?customCategory=true&enableAddonBenefitVisualization=false&enableAdvancedAddon=true&loyaltyEnabled=false&planEnabled=true
+```
+* response
+```json
+{
+    "addonGroups": [],
+    "categories": [
+        {
+            "id": "data",
+            "name": "Dátové balíčky",
+            "priority": 10000
+        },
+        {
+            "id": "roaming",
+            "name": "Roamingové balíčky",
+            "priority": 9500
+        }
+    ]
+}
+```
+
+##
+
+### Vypíš dostupné dátové balíčky pre kartu
+* bere accessToken
+```
+GET https://t-app.telekom.sk/v2/manageServices/product/SIEBEL-PRD-PRODUCT-xxxxxxxxxxxxxxxxxxxxxx/addons/?categoryId=data&enableAddonBenefitVisualization=false&enableAdvancedAddon=true&loyaltyEnabled=false&planEnabled=true
+```
+* response
+```json
+{
+    "categories": [
+        {
+            "id": "POSTPAID_DATA_ONE_DAY",
+            "name": "Denné - jednorazové",
+            "offers": [
+                {
+                    "description": "Dátový balíček <b>Denné dáta pre prenos plnou rýchlosťou. <br><b>Objem dát: neobmedzené </b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre.",
+                    "group": "addon",
+                    "id": "DATA DEN NEOB",
+                    "name": "Denné dáta neobmedzené",
+                    "price": {
+                        "amount": 3,
+                        "currencyCode": "EUR"
+                    },
+                    "priceType": "activationFee",
+                    "priority": 80,
+                    "shortDescription": "Dátový balíček <b>Denné dáta pre prenos plnou rýchlosťou. <br><b>Objem dát: neobmedzené </b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre.",
+                    "subscriptionPlanCharacteristics": false,
+                    "validUntil": "2021-09-22T13:22:20.177Z",
+                    "warningMessage": "Dátový balíček <b>Denné dáta pre prenos plnou rýchlosťou. <br><b>Objem dát: neobmedzené </b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre."
+                },
+                {
+                    "description": "Dátový balíček <b>Denné dáta 1  GB</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre.",
+                    "group": "addon",
+                    "id": "DATA_DEN_1_GB",
+                    "name": "Denné dáta 1 GB",
+                    "price": {
+                        "amount": 1.5,
+                        "currencyCode": "EUR"
+                    },
+                    "priceType": "activationFee",
+                    "priority": 70,
+                    "shortDescription": "Dátový balíček <b>Denné dáta 1 GB</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre.",
+                    "subscriptionPlanCharacteristics": false,
+                    "validUntil": "2021-09-22T13:22:20.177Z",
+                    "warningMessage": "Dátový balíček <b>Denné dáta 1  GB</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre."
+                }
+            ],
+            "priority": 6800
+        },
+        {
+            "id": "POSTPAID_DATA_BILL_CYCLE",
+            "name": "Mesačné - jednorazové",
+            "offers": [
+                {
+                    "description": "Dátový balíček <b>DATA 1 GB</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre.",
+                    "group": "addon",
+                    "id": "DATA_1_GB_PREN",
+                    "name": "DATA 1 GB",
+                    "price": {
+                        "amount": 3,
+                        "currencyCode": "EUR"
+                    },
+                    "priceType": "activationFee",
+                    "priority": 60,
+                    "shortDescription": "Dátový balíček <b>DATA 1 GB</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre.",
+                    "subscriptionPlanCharacteristics": false,
+                    "validUntil": "2021-10-31T22:59:59.999Z",
+                    "warningMessage": "Dátový balíček <b>DATA 1 GB</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Aktivácia balíčka vám bude účtovaná v najbližšej faktúre."
+                }
+            ],
+            "priority": 6700
+        },
+        {
+            "id": "POSTPAID_DATA_ADR",
+            "name": "Mesačné - automaticky dokupované",
+            "offers": [
+                {
+                    "description": "Dátový balíček <b>DATA 1 GB - Automatické dokupovanie</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Dáta z tohto balíčka čerpáte iba v prípade, ak už nemáte dáta z paušálu a nemáte aktivovaný žiaden iný dátový balíček. Po jeho vyčerpaní sa automaticky obnoví a môžete dáta znova využívať. Spoplatnené je každé obnovenie balíka a bude účtované v najbližšej faktúre. Automatické dokupovanie prebieha až do deaktivácie tohto balíčka.",
+                    "group": "addon",
+                    "id": "SC1708",
+                    "name": "DATA 1 GB - Automatické dokupovanie",
+                    "price": {
+                        "amount": 3,
+                        "currencyCode": "EUR"
+                    },
+                    "priceType": "recurringFee",
+                    "priority": 30,
+                    "recurringChargeDuration": 1,
+                    "recurringChargePeriod": "day",
+                    "shortDescription": "Dátový balíček <b>DATA 1 GB - Automatické dokupovanie</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Dáta z tohto balíčka čerpáte iba v prípade, ak už nemáte dáta z paušálu a nemáte aktivovaný žiaden iný dátový balíček. Po jeho vyčerpaní sa automaticky obnoví a môžete dáta znova využívať. Spoplatnené je každé obnovenie balíka a bude účtované v najbližšej faktúre. Automatické dokupovanie prebieha až do deaktivácie tohto balíčka.",
+                    "subscriptionPlanCharacteristics": false,
+                    "validUntil": "2021-10-31T22:59:59.999Z",
+                    "warningMessage": "Dátový balíček <b>DATA 1 GB - Automatické dokupovanie</b> pre prenos plnou rýchlosťou. <br><b>Objem dát: 1 GB</b><br>Dáta z tohto balíčka čerpáte iba v prípade, ak už nemáte dáta z paušálu a nemáte aktivovaný žiaden iný dátový balíček. Po jeho vyčerpaní sa automaticky obnoví a môžete dáta znova využívať. Spoplatnené je každé obnovenie balíka a bude účtované v najbližšej faktúre. Automatické dokupovanie prebieha až do deaktivácie tohto balíčka."
+                }
+            ],
+            "priority": 6600
+        },
+        {
+            "id": "POSTPAID_DATA_RECURRING",
+            "name": "S mesačným poplatkom",
+            "offers": [
+                {
+                    "description": "S balíkom <b>StreamOn</b> počúvate hudbu a pozeráte videá cez podporované mobilné aplikácie neobmedzene a bez obáv, že si miniete svoje dáta.<br><b>Cena balíka: 10,00€ s DPH /mesiac<br>Za balík <b>StreamOn</b> platíte mesačný poplatok až do deaktivácie balíka.",
+                    "group": "addon",
+                    "id": "SC1571",
+                    "name": "StreamOn – s automatickým obnovením",
+                    "price": {
+                        "amount": 10,
+                        "currencyCode": "EUR"
+                    },
+                    "priceType": "recurringFee",
+                    "priority": 65,
+                    "recurringChargeDuration": 1,
+                    "recurringChargePeriod": "month",
+                    "shortDescription": "S balíkom <b>StreamOn</b> počúvate hudbu a pozeráte videá cez podporované mobilné aplikácie neobmedzene a bez obáv, že si miniete svoje dáta. Podporované aplikácie nájdete na linke nižšie.<br><b>Cena balíka: 10,00€ s DPH /mesiac<br>Za balík <b>StreamOn</b> platíte mesačný poplatok až do deaktivácie balíka.",
+                    "subscriptionPlanCharacteristics": false,
+                    "termsAndConditionsUrl": "https://www.telekom.sk/streamon",
+                    "warningMessage": "S balíkom <b>StreamOn</b> počúvate hudbu a pozeráte videá cez podporované mobilné aplikácie neobmedzene a bez obáv, že si miniete svoje dáta.<br><b>Cena balíka: 10,00€ s DPH /mesiac<br>Za balík <b>StreamOn</b> platíte mesačný poplatok až do deaktivácie balíka."
+                }
+            ],
+            "priority": 6500
+        }
+    ]
+}
+```
